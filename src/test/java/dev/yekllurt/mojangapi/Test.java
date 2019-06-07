@@ -9,8 +9,8 @@ public class Test {
     public static void main(String[] args) {
 
         Logger.getGlobal().info("##### API Status #####");
-        MojangAPIStatus mojangAPIStatus = MojangAPI.getServicesStatus();
-        Map<Service, Status> servicesStatus = mojangAPIStatus.getServicesStatus();
+        MojangServiceStatus mojangServiceStatus = MojangAPI.getServicesStatus();
+        Map<Service, Status> servicesStatus = mojangServiceStatus.getServicesStatus();
         servicesStatus.keySet().forEach(key -> {
             Logger.getGlobal().info(key.toString() + ": " + servicesStatus.get(key).toString());
         });

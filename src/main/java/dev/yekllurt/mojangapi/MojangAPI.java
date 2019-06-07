@@ -26,18 +26,18 @@ public class MojangAPI {
     private static final JsonParser JSON_PARSER = new JsonParser();
 
     public static void getServiceStatus(Service service, Consumer<Status> callback) {
-        getServicesStatus((mojangAPIStatus) -> callback.accept(mojangAPIStatus.getServiceStatus(service)));
+        getServicesStatus((mojangServiceStatus) -> callback.accept(mojangServiceStatus.getServiceStatus(service)));
     }
 
     public static Status getServiceStatus(Service service) {
         return getServicesStatus().getServiceStatus(service);
     }
 
-    public static void getServicesStatus(Consumer<MojangAPIStatus> callback) {
+    public static void getServicesStatus(Consumer<MojangServiceStatus> callback) {
         EXECUTOR_SERVICE.execute(() -> callback.accept(getServicesStatus()));
     }
 
-    public static MojangAPIStatus getServicesStatus() {
+    public static MojangServiceStatus getServicesStatus() {
         try {
             URL url = new URL(API_STATUS_URL);
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
@@ -54,7 +54,7 @@ public class MojangAPI {
                     servicesStatus.put(Service.getByService(key), Status.getByMojangStatus(jsonObject.get(key).getAsString()));
                 });
             });
-            return new MojangAPIStatus(servicesStatus);
+            return new MojangServiceStatus(servicesStatus);
         } catch (IOException e) {
             e.printStackTrace();
         }
