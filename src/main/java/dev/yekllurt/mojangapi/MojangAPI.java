@@ -14,7 +14,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 public class MojangAPI {
 
@@ -26,11 +25,19 @@ public class MojangAPI {
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
     private static final JsonParser JSON_PARSER = new JsonParser();
 
-    public static void getAPIStatus(Consumer<MojangAPIStatus> callback) {
-        EXECUTOR_SERVICE.execute(() -> callback.accept(getAPIStatus()));
+    public static void getServiceStatus(Service service, Consumer<Status> callback) {
+        getServicesStatus((mojangAPIStatus) -> callback.accept(mojangAPIStatus.getServiceStatus(service)));
     }
 
-    public static MojangAPIStatus getAPIStatus() {
+    public static Status getServiceStatus(Service service) {
+        return getServicesStatus().getServiceStatus(service);
+    }
+
+    public static void getServicesStatus(Consumer<MojangAPIStatus> callback) {
+        EXECUTOR_SERVICE.execute(() -> callback.accept(getServicesStatus()));
+    }
+
+    public static MojangAPIStatus getServicesStatus() {
         try {
             URL url = new URL(API_STATUS_URL);
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
@@ -39,27 +46,15 @@ public class MojangAPI {
             if (result.isJsonArray() == false) {
                 return null;
             }
-            Map<String, MojangAPIStatus.Status> apis = new HashMap<>();
+            Map<Service, Status> servicesStatus = new HashMap<>();
             JsonArray jsonArray = result.getAsJsonArray();
             jsonArray.forEach(jsonElement -> {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 jsonObject.keySet().forEach(key -> {
-                    MojangAPIStatus.Status status = MojangAPIStatus.Status.UNKNOWN;
-                    switch (jsonObject.get(key).getAsString()) {
-                        case "green":
-                            status = MojangAPIStatus.Status.GREEN;
-                            break;
-                        case "yellow":
-                            status = MojangAPIStatus.Status.YELLOW;
-                            break;
-                        case "red":
-                            status = MojangAPIStatus.Status.RED;
-                            break;
-                    }
-                    apis.put(key, status);
+                    servicesStatus.put(Service.getByService(key), Status.getByMojangStatus(jsonObject.get(key).getAsString()));
                 });
             });
-            return new MojangAPIStatus(apis);
+            return new MojangAPIStatus(servicesStatus);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,7 +1,5 @@
 package dev.yekllurt.mojangapi;
 
-import dev.yekllurt.mojangapi.*;
-
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -11,11 +9,12 @@ public class Test {
     public static void main(String[] args) {
 
         Logger.getGlobal().info("##### API Status #####");
-        MojangAPIStatus mojangAPIStatus = MojangAPI.getAPIStatus();
-        Map<String, MojangAPIStatus.Status> apis = mojangAPIStatus.getAPIs();
-        apis.keySet().forEach(key -> {
-            Logger.getGlobal().info(key + ": " + apis.get(key).toString());
+        MojangAPIStatus mojangAPIStatus = MojangAPI.getServicesStatus();
+        Map<Service, Status> servicesStatus = mojangAPIStatus.getServicesStatus();
+        servicesStatus.keySet().forEach(key -> {
+            Logger.getGlobal().info(key.toString() + ": " + servicesStatus.get(key).toString());
         });
+        Logger.getGlobal().info("Account service: " + MojangAPI.getServiceStatus(Service.ACCOUNT_MOJANG_COM).toString());
 
         Logger.getGlobal().info("##### UUID #####");
         Logger.getGlobal().info("UUID from Yekllurt at 1559830084: " + MojangAPI.getUUIDAt("Yekllurt", 1559830084).toString());

@@ -5,24 +5,19 @@ import java.util.Objects;
 
 public class MojangAPIStatus {
 
-    public enum Status {
-        GREEN, YELLOW, RED, UNKNOWN;
+    private final Map<Service, Status> servicesStatus;
+
+    public MojangAPIStatus(Map<Service, Status> servicesStatus) {
+        Objects.requireNonNull(servicesStatus);
+        this.servicesStatus = servicesStatus;
     }
 
-    private final Map<String, Status> apis;
-
-    public MojangAPIStatus(Map<String, Status> apis) {
-        Objects.requireNonNull(apis);
-        this.apis = apis;
+    public Status getServiceStatus(Service service) {
+        Objects.requireNonNull(service);
+        return this.servicesStatus.get(service);
     }
 
-    public Status getAPIStatus(String api) {
-        Objects.requireNonNull(api);
-        return this.apis.get(api);
+    public Map<Service, Status> getServicesStatus() {
+        return servicesStatus;
     }
-
-    public Map<String, Status> getAPIs() {
-        return this.apis;
-    }
-
 }
