@@ -1,5 +1,6 @@
 package dev.yekllurt.mojangapi;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Texture {
@@ -13,6 +14,9 @@ public class Texture {
     private String cape;
 
     public Texture(long timestamp, UUID profileId, String profileName, String skin) {
+        Objects.requireNonNull(profileId);
+        Objects.requireNonNull(profileName);
+        Objects.requireNonNull(skin);
         this.timestamp = timestamp;
         this.profileId = profileId;
         this.profileName = profileName;
@@ -22,6 +26,10 @@ public class Texture {
     }
 
     public Texture(long timestamp, UUID profileId, String profileName, String skin, String cape) {
+        Objects.requireNonNull(profileId);
+        Objects.requireNonNull(profileName);
+        Objects.requireNonNull(skin);
+        Objects.requireNonNull(cape);
         this.timestamp = timestamp;
         this.profileId = profileId;
         this.profileName = profileName;

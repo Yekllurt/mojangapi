@@ -1,5 +1,7 @@
 package dev.yekllurt.mojangapi;
 
+import java.util.Objects;
+
 public enum Status {
 
     GREEN("green"),
@@ -18,6 +20,7 @@ public enum Status {
     }
 
     public static Status getByMojangStatus(String status) {
+        Objects.requireNonNull(status);
         for (Status s : values()) {
             if (s.getStatus().equals(status)) {
                 return s;

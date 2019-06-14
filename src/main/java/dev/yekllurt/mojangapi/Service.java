@@ -1,5 +1,7 @@
 package dev.yekllurt.mojangapi;
 
+import java.util.Objects;
+
 public enum Service {
 
     MINECRAT_NET("minecraft.net"),
@@ -25,6 +27,7 @@ public enum Service {
     }
 
     public static Service getByService(String serivce) {
+        Objects.requireNonNull(serivce);
         for (Service s : values()) {
             if (s.getService().equals(serivce)) {
                 return s;
